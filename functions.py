@@ -1,8 +1,6 @@
-import matplotlib.pyplot as plt 
-import pandas as pd 
-import numpy as np 
+import numpy as np
+import pandas as pd
 import os
-import shutil
 
 def draw_list_of_data(ax, data_path, graph_dict):
 
@@ -55,3 +53,29 @@ def draw_one_color(color, lines):
     n = len(lines)
     for i in range(n):
         lines[i].set_color(color)
+
+def get_data(data_path, folder, number):
+    start_dir = os.path.dirname(os.path.abspath(__file__)) + '\\' + data_path
+    graph_data_path = start_dir + '\\' + folder + '\\' +  str(number) + '.data'
+    df = pd.read_csv(graph_data_path, delimiter='   ', skiprows=16, engine='python', header=None, encoding='ISO-8859-1').astype(np.float32)
+    return df
+
+def get_on_off_voltage(data_path, graph_dict):
+
+    on_off_voltage = []
+    start_dir = os.path.dirname(os.path.abspath(__file__)) + '\\' + data_path
+    os.chdir(start_dir)
+    for i in graph_dict.keys():
+        os.chdir(start_dir + '\\' + i + '\\')
+        for j in graph_dict[i]:
+            graph_data_path = start_dir + '\\' + i + '\\' + str(j) + '.data'
+            df = pd.read_csv(graph_data_path, delimiter='   ', skiprows=16, engine='python', header=None, encoding='ISO-8859-1').astype(np.float32)
+            V, I = np.array(df[0]), np.array(df[1])
+            deriv = np.array([(I[i+1] - I[i])/(V[i+1] - V[i]) if (V[i+1] - V[i]) != 0 else (I[i+1] - I[i])/0.05 for i in range(len(I) - 1) ])
+            df_2 = pd.DataFrame([V[:-1], np.abs(deriv)]).transpose()
+            df_plus = df_2.loc[df_2[0] > 0]
+            df_minus = df_2.loc[df_2[0] < 0]
+            on_off_voltage.append([df_minus.iloc[np.argmax(df_minus[1])][0] , np.abs(df_plus.iloc[np.argmax(df_plus[1])][0])])
+        os.chdir(start_dir)
+
+    return np.array(on_off_voltage)
