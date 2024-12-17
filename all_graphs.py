@@ -13,7 +13,7 @@ def graph_DC_IV(data_path: str, save_path: str, name: str):
     ax.plot(df[0], np.abs(df[1]))
     ax.set_yscale('log')
     #ax.set_xlim([-5,5])
-    ax.set_ylim([10**(-8), 10**(-2)])
+    #ax.set_ylim([10**(-8), 10**(-2)])
     #ax.set_title(f'{i} measurment with {lines[10].split()[1]} positive complines')
     ax.grid(which='major', linewidth = 0.6)
     ax.grid(which='minor', linewidth = 0.2)
@@ -81,4 +81,7 @@ def all_graphs(data_path: str) :
             match all_contacts_info[dir_list[i]][data_number]['type']:
                 case 'DC IV':
                     graph_DC_IV(local_data_path, local_graph_path, str(data_number))
+
+
+all_graphs('vox_7890')
 
