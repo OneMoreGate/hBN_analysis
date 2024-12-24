@@ -51,9 +51,11 @@ def get_data_from_dict(data_folder: str, dict_of_data: dict) -> dict:
             output_data_dict[i][j] = single_df
     return output_data_dict
 
-def draw_gradient_line(ax, V, I, colors):
+
+def get_gradient_line(ax, V, I, colors):
     for i in range(len(V)-1):
         ax.plot([V[i], V[i+1]], np.abs([I[i], I[i+1]]), c = colors[i], linewidth = 2)
+
 
 
 def draw_all_graphs(data_folder: str):
@@ -71,7 +73,7 @@ def draw_all_graphs(data_folder: str):
                 V = np.array(all_data[i][j]['voltage'])
                 print([i, j])
                 colors = get_colors_from_cmap('plasma', len(V))
-                draw_gradient_line(ax, V, I, colors)
+                get_gradient_line(ax, V, I, colors)
                 ax.set_yscale('log')
                 ax.grid(which='major', linewidth = 0.6)
                 ax.grid(which='minor', linewidth = 0.2)
@@ -84,5 +86,4 @@ def draw_all_graphs(data_folder: str):
                 plt.clf()
                 plt.close(fig)
 
-draw_all_graphs('hBN_1_2')
 draw_all_graphs('hBN_1_3')
