@@ -86,4 +86,4 @@ def draw_all_graphs(data_folder: str):
                 plt.clf()
                 plt.close(fig)
 
-draw_all_graphs('hBN_1_3')
+#draw_all_graphs('hBN_1_3')
